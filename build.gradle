@@ -44,6 +44,7 @@ subprojects { subproject ->
 		springDataRedisVersion = '1.0.4.RELEASE'
 		springDataHadoopVersion = '1.0.0.RELEASE'
 		tomcatVersion = '7.0.35'
+		mockitoVersion = '1.9.5'
 	}
 
 	eclipse {
@@ -168,6 +169,15 @@ project('spring-xd-hadoop') {
 		compile "org.springframework.batch:spring-batch-core:$springBatchVersion"
 		compile "org.springframework.data:spring-data-mongodb:$springDataMongoVersion"
 		compile "org.springframework.data:spring-data-hadoop:$springDataHadoopVersion"
+	}
+}
+
+project('spring-xd-tcp') {
+	description = 'Spring XD TCP'
+	dependencies {
+		compile "org.springframework:spring-context:$springVersion"
+		compile "reactor:reactor-core:1.0.0.BUILD-SNAPSHOT"
+		testCompile "org.mockito:mockito-all:$mockitoVersion"
 	}
 }
 
