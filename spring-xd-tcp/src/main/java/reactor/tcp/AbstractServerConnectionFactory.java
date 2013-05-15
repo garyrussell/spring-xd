@@ -105,7 +105,8 @@ public abstract class AbstractServerConnectionFactory
 		if (this.isSingleUse() && this.getSoTimeout() < 0) {
 			try {
 				socket.setSoTimeout(DEFAULT_REPLY_TIMEOUT);
-			} catch (SocketException e) {
+			}
+			catch (SocketException e) {
 				logger.error("Error setting default reply timeout", e);
 			}
 		}

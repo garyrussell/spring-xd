@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-ip="http://www.springframework.org/schema/integration/ip"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/integration/ip http://www.springframework.org/schema/integration/ip/spring-integration-ip.xsd">
+
+
+	<bean id="serverFactory" class="org.springframework.integration.ipx.tcp.reactor.adapter.ServerConnectionFactoryAdapter">
+		<constructor-arg>
+			<bean class="reactor.tcp.TcpNioServerConnectionFactory">
+				<constructor-arg value="12345" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="clientFactory" class="org.springframework.integration.ipx.tcp.reactor.adapter.ClientConnectionFactoryAdapter">
+		<constructor-arg>
+			<bean class="reactor.tcp.TcpNioClientConnectionFactory">
+				<constructor-arg value="localhost" />
+				<constructor-arg value="12345" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<int:channel id="toTCPGateway" />
+
+	<int-ip:tcp-outbound-gateway connection-factory="clientFactory"
+		request-channel="toTCPGateway" reply-channel="fromTCPGateway" reply-timeout="60000" />
+
+	<int:channel id="fromTCPGateway">
+		<int:queue/>
+	</int:channel>
+
+	<int-ip:tcp-inbound-gateway request-channel="toEchoGateway" connection-factory="serverFactory" />
+
+	<int:transformer input-channel="toEchoGateway"
+		expression="'echo:' + new String(payload, 'UTF-8')"/>
+
+
+	<bean id="serverFactory2" class="org.springframework.integration.ipx.tcp.reactor.adapter.ServerConnectionFactoryAdapter">
+		<constructor-arg>
+			<bean class="reactor.tcp.TcpNioServerConnectionFactory">
+				<constructor-arg value="12346" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="clientFactory2" class="org.springframework.integration.ipx.tcp.reactor.adapter.ClientConnectionFactoryAdapter">
+		<constructor-arg>
+			<bean class="reactor.tcp.TcpNioClientConnectionFactory">
+				<constructor-arg value="localhost" />
+				<constructor-arg value="12346" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<int:channel id="toTCPAdapter" />
+
+	<int-ip:tcp-outbound-channel-adapter connection-factory="clientFactory2"
+		channel="toTCPAdapter" />
+
+	<int-ip:tcp-inbound-channel-adapter connection-factory="clientFactory2"
+		channel="fromTCPAdapter" />
+
+	<int:channel id="fromTCPAdapter">
+		<int:queue/>
+	</int:channel>
+
+	<int-ip:tcp-inbound-channel-adapter channel="toEchoAdapter" connection-factory="serverFactory2" />
+
+	<int:transformer input-channel="toEchoAdapter" output-channel="fromEchoAdapter"
+		expression="'echo:' + new String(payload, 'UTF-8')"/>
+
+	<int:channel id="fromEchoAdapter" />
+
+	<int-ip:tcp-outbound-channel-adapter connection-factory="serverFactory2"
+		channel="fromEchoAdapter" />
+
+</beans>

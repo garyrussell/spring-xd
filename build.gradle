@@ -181,6 +181,16 @@ project('spring-xd-tcp') {
 	}
 }
 
+project('spring-xd-tcp-adapter') {
+	description = 'Spring XD TCP SI Adapter'
+	dependencies {
+		compile "org.springframework.integration:spring-integration-ip:$springIntegrationVersion"
+		compile project(":spring-xd-tcp")
+		testCompile "org.mockito:mockito-all:$mockitoVersion"
+		testCompile "org.springframework:spring-test:$springVersion"
+	}
+}
+
 project('spring-xd-test') {
 	description = 'Spring XD Test'
 	dependencies {

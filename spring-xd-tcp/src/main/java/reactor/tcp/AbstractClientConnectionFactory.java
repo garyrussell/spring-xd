@@ -72,6 +72,8 @@ public abstract class AbstractClientConnectionFactory extends ConnectionFactoryS
 		if (listener != null) {
 			connection.registerListener(listener);
 		}
+		connection.setSingleUse(this.isSingleUse());
+		connection.publishConnectionOpenEvent();
 	}
 
 	/**
