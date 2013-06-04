@@ -16,13 +16,18 @@
 
 package org.springframework.xd.dirt.stream;
 
+import java.util.Collection;
+
+import org.springframework.xd.dirt.module.ModuleDeploymentRequest;
+
 /**
  * @author Mark Fisher
  * @author Gary Russell
+ * @author David Turanski
  */
 public interface StreamDeployer {
 
-	void deployStream(String name, String config);
+	Collection<ModuleDeploymentRequest> deployStream(String name, String config);
 
-	void undeployStream(String name);
+	Collection<ModuleDeploymentRequest> undeployStream(String name);
 }

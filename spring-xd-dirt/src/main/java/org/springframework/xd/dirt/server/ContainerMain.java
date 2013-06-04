@@ -21,23 +21,24 @@ import org.apache.commons.logging.LogFactory;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.springframework.xd.dirt.launcher.RedisContainerLauncher;
-import org.springframework.xd.dirt.stream.StreamServer;
 
 /**
  * The main driver class for ContainerMain 
  * @author Mark Pollack
  * @author Jennifer Hickey
+ * @author David Turanski
  *
  */
 public class ContainerMain {
 
 	private static final Log logger = LogFactory.getLog(ContainerMain.class);
+
 	/**
 	 * Start the RedisContainerLauncher
 	 * @param args command line argument
 	 */
 	public static void main(String[] args) {
-		ContainerOptions options = new  ContainerOptions();
+		ContainerOptions options = new ContainerOptions();
 		CmdLineParser parser = new CmdLineParser(options);
 		try {
 			parser.parseArgument(args);
@@ -46,23 +47,19 @@ public class ContainerMain {
 			parser.printUsage(System.err);
 			System.exit(1);
 		}
-		
+
 		if (options.isShowHelp()) {
 			parser.printUsage(System.err);
 			System.exit(0);
 		}
-		
+
 		if (StringUtils.isNotEmpty(options.getXDHomeDir())) {
 			System.setProperty("xd.home", options.getXDHomeDir());
 		}
-		
-		if (options.isEmbeddedAdmin() == true ) {	
-			StreamServer.main(new String[] {options.getRedisHost(), Integer.toString(options.getRedisPort())});
-		}
-		
+
 		//Future versions to support other types of container launchers
-		
-		RedisContainerLauncher.main(new String[]{});
+
+		RedisContainerLauncher.main(new String[] {});
 	}
 
 }

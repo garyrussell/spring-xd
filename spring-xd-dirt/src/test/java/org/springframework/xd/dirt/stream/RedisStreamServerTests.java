@@ -22,13 +22,13 @@ import org.junit.Test;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.xd.dirt.launcher.RedisContainerLauncher;
 import org.springframework.xd.dirt.stream.RedisStreamDeployer;
-import org.springframework.xd.dirt.stream.StreamServer;
+import org.springframework.xd.dirt.stream.RedisStreamServer;
 /**
  * @author Winston Koh
  * @since 1.0
  *
  */
-public class StreamServerTests {
+public class RedisStreamServerTests {
 
 	@Test
 	public void testSimpleServer() {
@@ -38,7 +38,7 @@ public class StreamServerTests {
 			connectionFactory = new LettuceConnectionFactory();
 			connectionFactory.afterPropertiesSet();
 			RedisStreamDeployer streamDeployer = new RedisStreamDeployer(connectionFactory);
-			StreamServer server = new StreamServer(streamDeployer);
+			RedisStreamServer server = new RedisStreamServer(streamDeployer);
 			server.afterPropertiesSet();
 			server.start();
 			server.stop();
