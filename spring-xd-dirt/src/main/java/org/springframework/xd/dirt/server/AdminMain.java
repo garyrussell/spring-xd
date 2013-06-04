@@ -21,7 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.springframework.xd.dirt.launcher.RedisContainerLauncher;
-import org.springframework.xd.dirt.stream.StreamServer;
+import org.springframework.xd.dirt.stream.RedisStreamServer;
 
 /**
  * The main driver class for the AdminMain
@@ -50,15 +50,8 @@ public class AdminMain {
 			parser.printUsage(System.err);
 			System.exit(0);
 		}
-		
-		if (options.isEmbeddedContainer()) {
-			if (StringUtils.isNotEmpty(options.getXDHomeDir())) {
-				System.setProperty("xd.home", options.getXDHomeDir());
-			}
-			RedisContainerLauncher.main(new String[]{});
-		}
 
-		StreamServer.main(new String[] {options.getRedisHost(), Integer.toString(options.getRedisPort())});
+		RedisStreamServer.main(new String[] {options.getRedisHost(), Integer.toString(options.getRedisPort())});
 
 	}
 

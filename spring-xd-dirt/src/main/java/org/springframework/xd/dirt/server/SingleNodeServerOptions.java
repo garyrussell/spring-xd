@@ -20,42 +20,22 @@ import org.kohsuke.args4j.Option;
 /**
  * A class the defines the options that will be parsed on the command line
  * @author Mark Pollack
- * @author David Turanski
  *
  */
-public class AdminOptions {
-
-	//@Option(name="--redisHost", usage="the hostname of the redis sever", metaVar="<redisHost>")
-	private String redisHost = "localhost";
-
-	//@Option(name="--redisPort", usage="the port number of the redis sever", metaVar="<redisPort>")
-	private int redisPort = 6379;
+public class SingleNodeServerOptions {
 
 	@Option(name = "--help", usage = "Show options help", aliases = { "-?", "-h" })
 	private boolean showHelp = false;
 
-	@Option(name = "--xdHomeDir", usage = "The XD installation directory, use with --embeddedAdmin", metaVar = "<xdHomeDir>")
+	@Option(name = "--xdHomeDir", usage = "The XD installation directory", metaVar = "<xdHomeDir>")
 	private String xdHomeDir = "";
+
 
 	/**
 	 * @return the showHelp
 	 */
 	public boolean isShowHelp() {
 		return showHelp;
-	}
-
-	/**
-	 * @return the redisHost
-	 */
-	public String getRedisHost() {
-		return redisHost;
-	}
-
-	/**
-	 * @return the redisPort
-	 */
-	public int getRedisPort() {
-		return redisPort;
 	}
 
 	/**

@@ -1,19 +1,15 @@
 /*
- * Copyright 2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2002-2013 the original author or authors.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
-
 package org.springframework.xd.dirt.stream;
 
 import java.io.File;
@@ -32,28 +28,19 @@ import org.apache.catalina.core.AprLifecycleListener;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.SmartLifecycle;
-import org.springframework.data.redis.RedisConnectionFailureException;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.integration.MessagingException;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.xd.dirt.redis.ExceptionWrappingLettuceConnectionFactory;
 
 /**
- * This is a temporary "server" for the REST API. Currently it only handles simple
- * stream configurations (tokens separated by pipes) without any parameters. This
- * will be completely replaced by a more robust solution. Intended for demo only.
+ * @author David Turanski
  *
- * @author Mark Fisher
- * @author Jennifer Hickey
  */
-public class StreamServer implements SmartLifecycle, InitializingBean {
-
-	private final Log logger = LogFactory.getLog(getClass());
+public abstract class StreamServer implements SmartLifecycle, InitializingBean {
+	protected final Log logger = LogFactory.getLog(getClass());
 
 	private volatile String contextPath = "";
 
@@ -69,34 +56,33 @@ public class StreamServer implements SmartLifecycle, InitializingBean {
 
 	private volatile boolean running;
 
-	private final StreamDeployer streamDeployer;
-
+	protected final StreamDeployer streamDeployer;
+	
 	public StreamServer(StreamDeployer streamDeployer) {
 		Assert.notNull(streamDeployer, "streamDeployer must not be null");
 		this.streamDeployer = streamDeployer;
 	}
-
 	/**
-	 * Set the port. Default is: 8080
+	 * Set the port. Default is 8080
 	 */
 	public void setPort(int port) {
 		this.port = port;
 	}
-
 	/**
-	 * Set the context path. Default is empty.
+	 * Set the contextPath
+	 * @param contextPath
 	 */
 	public void setContextPath(String contextPath) {
 		this.contextPath = contextPath;
 	}
 
 	/**
-	 * Set the servlet name. Default is: streams
+	 * Set the servletName. Default is streams
+	 * @param servletName
 	 */
 	public void setServletName(String servletName) {
 		this.servletName = servletName;
 	}
-
 	@Override
 	public void afterPropertiesSet() {
 		this.scheduler.setPoolSize(3);
@@ -168,7 +154,7 @@ public class StreamServer implements SmartLifecycle, InitializingBean {
 			tomcat.getServer().await();
 		}
 	}
-
+	
 	@SuppressWarnings("serial")
 	private class XdServlet extends HttpServlet {
 		@Override
@@ -187,37 +173,6 @@ public class StreamServer implements SmartLifecycle, InitializingBean {
 			else {
 				response.sendError(405);
 			}
-		}
-	}
-
-	public static void main(String[] args) {
-		try {
-			bootstrap(args);
-		}
-		catch(RedisConnectionFailureException e) {
-			final Log logger = LogFactory.getLog(StreamServer.class);
-			logger.fatal(e.getMessage());
-			System.err.println("Redis does not seem to be running. Did you install and start Redis? " +
-					"Please see the Getting Started section of the guide for instructions.");
-			System.exit(1);
-		}
-	}
-
-	private static void bootstrap(String[] args) {
-		LettuceConnectionFactory connectionFactory = getConnectionFactory(args);
-		connectionFactory.afterPropertiesSet();
-		RedisStreamDeployer streamDeployer = new RedisStreamDeployer(connectionFactory);
-		StreamServer server = new StreamServer(streamDeployer);
-		server.afterPropertiesSet();
-		server.start();
-	}
-
-	private static LettuceConnectionFactory getConnectionFactory(String[] args) {
-		if (args.length >= 2) {
-			return new ExceptionWrappingLettuceConnectionFactory(args[0], Integer.parseInt(args[1]));
-		}
-		else {
-			return new ExceptionWrappingLettuceConnectionFactory();
 		}
 	}
 
