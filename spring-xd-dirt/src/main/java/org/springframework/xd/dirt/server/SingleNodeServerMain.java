@@ -45,9 +45,6 @@ public class SingleNodeServerMain {
 			parser.printUsage(System.err);
 			System.exit(0);
 		}
-
-		RedisStreamServer.main(new String[] {options.getRedisHost(), Integer.toString(options.getRedisPort())});
-
 	}
 
 }

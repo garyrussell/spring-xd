@@ -36,6 +36,9 @@ import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 
 /**
+ * @author Mark Fisher
+ * @author Jennifer Hickey
+ * @author Gary Russell
  * @author David Turanski
  *
  */
