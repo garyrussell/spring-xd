@@ -10,24 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.springframework.xd.dirt.stream;
+package org.springframework.xd.dirt.module;
+
 
 /**
  * @author David Turanski
  *
  */
-public class LocalStreamServer extends StreamServer {
-	/**
-	 * @param streamDeployer
-	 */
-	public LocalStreamServer(StreamDeployer streamDeployer ) {
-		super(streamDeployer);
-	}
-	
-	public static void main(String[] args) {
-		StreamDeployer streamDeployer = new LocalStreamDeployer();
-		StreamServer server = new LocalStreamServer(streamDeployer);
-		server.afterPropertiesSet();
-		server.start();
-	}
+public interface ModuleDeploymentRequestQueue {
+	public void addRequest(ModuleDeploymentRequest request);
 }

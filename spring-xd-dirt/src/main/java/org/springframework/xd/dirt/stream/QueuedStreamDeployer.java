@@ -20,37 +20,47 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.util.Assert;
 import org.springframework.xd.dirt.module.ModuleDeploymentRequest;
+import org.springframework.xd.dirt.module.ModuleDeploymentRequestQueue;
 
 /**
+ * A {@link StreamDeployer} implementation that uses a {@link ModuleDeploymentRequestQueue}
  * @author Mark Fisher
  * @author Gary Russell
  * @author David Turanski
  */
-public class SimpleStreamDeployer extends StreamDeployerSupport implements StreamDeployer {
+public class QueuedStreamDeployer extends StreamDeployerSupport implements StreamDeployer {
 
 	private final StreamParser streamParser;
+	private final ModuleDeploymentRequestQueue moduleDeploymentRequestQueue;
 
-	public SimpleStreamDeployer(StreamParser streamParser) {
+	public QueuedStreamDeployer(StreamParser streamParser, ModuleDeploymentRequestQueue moduleDeploymentRequestQueue) {
+		Assert.notNull(streamParser, "streamParser cannot be null");
+		Assert.notNull(moduleDeploymentRequestQueue, "moduleDeploymentRequestQueue cannot be null");
 		this.streamParser = streamParser;
+		this.moduleDeploymentRequestQueue = moduleDeploymentRequestQueue;
 	}
+
 	@Override
-	public Collection<ModuleDeploymentRequest> deployStream(String name, String config) {
+	public void deployStream(String name, String config) {
 		List<ModuleDeploymentRequest> requests = this.streamParser.parse(name, config);
 		this.addDeployment(name, requests);
-		return requests;
+		for (ModuleDeploymentRequest request : requests) {
+			this.moduleDeploymentRequestQueue.addRequest(request);
+		}
 	}
 
 	@Override
-	public Collection<ModuleDeploymentRequest> undeployStream(String name) {
+	public void undeployStream(String name) {
 		List<ModuleDeploymentRequest> requests = this.removeDeployment(name);
 		if (requests != null) {
 			// undeploy in the reverse sequence (source first)
 			Collections.reverse(requests);
 			for (ModuleDeploymentRequest request : requests) {
 				request.setRemove(true);
+				this.moduleDeploymentRequestQueue.addRequest(request);
 			}
 		}
-		return requests;
 	}
 }
