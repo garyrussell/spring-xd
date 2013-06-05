@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:int-redis="http://www.springframework.org/schema/integration/redis"
 	xmlns:redis="http://www.springframework.org/schema/redis"
 	xsi:schemaLocation="http://www.springframework.org/schema/redis http://www.springframework.org/schema/redis/spring-redis.xsd
@@ -9,35 +8,38 @@
 		http://www.springframework.org/schema/integration/redis http://www.springframework.org/schema/integration/redis/spring-integration-redis-3.0.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-<!-- 	<beans profile="default"> -->
-		<bean id="redisConnectionFactory"
-			class="org.springframework.xd.dirt.redis.ExceptionWrappingLettuceConnectionFactory">
-			<constructor-arg index="0" value="${redis.hostname:localhost}" />
-			<constructor-arg index="1" value="${redis.port:6379}" />
-		</bean>
-		<bean id="redisInboundAdapter"
-			class="org.springframework.integration.x.redis.RedisQueueInboundChannelAdapter">
-			<constructor-arg value="queue.deployer" />
-			<constructor-arg ref="redisConnectionFactory" />
-			<property name="outputChannel" ref="input" />
-			<property name="extractPayload" value="false" />
-		</bean>
+	<bean id="redisConnectionFactory"
+		class="org.springframework.xd.dirt.redis.ExceptionWrappingLettuceConnectionFactory">
+		<constructor-arg index="0" value="${redis.hostname:localhost}" />
+		<constructor-arg index="1" value="${redis.port:6379}" />
+	</bean>
+	<bean id="redisInboundAdapter"
+		class="org.springframework.integration.x.redis.RedisQueueInboundChannelAdapter">
+		<constructor-arg value="queue.deployer" />
+		<constructor-arg ref="redisConnectionFactory" />
+		<property name="outputChannel" ref="input" />
+		<property name="extractPayload" value="false" />
+	</bean>
 
-		<bean class="org.springframework.xd.dirt.listener.RedisContainerEventListener">
-			<constructor-arg ref="redisConnectionFactory"/>
-		</bean>
+	<bean
+		class="org.springframework.xd.dirt.listener.RedisContainerEventListener">
+		<constructor-arg ref="redisConnectionFactory" />
+	</bean>
 
-		<redis:listener-container>
-			<redis:listener topic="topic.undeployer" ref="handler"
-				method="undeploy" />
-		</redis:listener-container>
+	<redis:listener-container>
+		<redis:listener topic="topic.undeployer" ref="handler"
+			method="undeploy" />
+	</redis:listener-container>
 
-		<int-redis:outbound-channel-adapter
-			id="moduleEventsOut" topic="events:modules" />
+	<int-redis:outbound-channel-adapter
+		id="moduleEventsOut" topic="events:modules" />
 
-		<int-redis:outbound-channel-adapter
-			id="moduleContainerEventsOut" topic="events:containers" />
+	<int-redis:outbound-channel-adapter
+		id="moduleContainerEventsOut" topic="events:containers" />
 
-<!-- 	</beans> -->
+	<bean id="channelRegistry"
+		class="org.springframework.integration.x.redis.RedisChannelRegistry">
+		<constructor-arg ref="redisConnectionFactory" />
+	</bean>
 
 </beans>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-3.0.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="channelRegistry"
+		class="org.springframework.integration.x.channel.registry.LocalChannelRegistry">
+	</bean>
+	
+	<int:channel id="moduleEventsOut">
+		<int:queue/>
+	</int:channel>
+
+	<task:executor id="module-events" pool-size="1"/>
+
+	<int:service-activator input-channel="moduleEventsOut" ref="handler">
+		<int:poller fixed-rate="10" task-executor="module-events"/>
+	</int:service-activator>
+
+	<int:logging-channel-adapter id="moduleContainerEventsOut"/>
+</beans>
