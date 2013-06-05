@@ -20,6 +20,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.xd.dirt.launcher.RedisContainerLauncher;
 import org.springframework.xd.dirt.stream.RedisStreamServer;
 
@@ -45,13 +47,29 @@ public class AdminMain {
 			parser.printUsage(System.err);
 			System.exit(1);
 		}
-		
+
 		if (options.isShowHelp()) {
 			parser.printUsage(System.err);
 			System.exit(0);
 		}
 
-		RedisStreamServer.main(new String[] {options.getRedisHost(), Integer.toString(options.getRedisPort())});
+		if (StringUtils.isNotEmpty(options.getXDHomeDir())) {
+			System.setProperty("xd.home", options.getXDHomeDir());
+		}
+		else {
+			System.setProperty("xd.home", System.getProperty("user.dir") + "/../");
+		}
+		if (options.isEmbeddedContainer()) {
+			RedisContainerLauncher.main(new String[]{});
+		}
+
+		if (options.isRedis()) {
+			RedisStreamServer.main(new String[] {options.getRedisHost(), Integer.toString(options.getRedisPort())});
+		}
+		else {
+			System.setProperty("xd.transport", "local");
+			new ClassPathXmlApplicationContext("/META-INF/spring/container.xml");
+		}
 
 	}
 

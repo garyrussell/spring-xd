@@ -20,37 +20,39 @@ import org.kohsuke.args4j.Option;
 /**
  * A class the defines the options that will be parsed on the command line
  * @author Mark Pollack
- * @author David Turanski
  *
  */
 public class AdminOptions {
 
 	//@Option(name="--redisHost", usage="the hostname of the redis sever", metaVar="<redisHost>")
-	private String redisHost = "localhost";
+	private final String redisHost = "localhost";
 
 	//@Option(name="--redisPort", usage="the port number of the redis sever", metaVar="<redisPort>")
-	private int redisPort = 6379;
+	private final int redisPort = 6379;
 
-	@Option(name = "--help", usage = "Show options help", aliases = { "-?", "-h" })
-	private boolean showHelp = false;
+	@Option(name="--help", usage="Show options help", aliases={"-?", "-h"})
+	private final boolean showHelp = false;
 
-	@Option(name = "--xdHomeDir", usage = "The XD installation directory, use with --embeddedAdmin", metaVar = "<xdHomeDir>")
-	private String xdHomeDir = "";
+	@Option(name="--xdHomeDir", usage="The XD installation directory, use with --embeddedAdmin", metaVar="<xdHomeDir>")
+	private final String xdHomeDir = "";
 
+	@Option(name="--embeddedContainer", usage="embed the XD Container")
+	private final boolean embeddedContainer = false;
+
+	@Option(name="--redis", usage="Use Redis", metaVar="<redis>")
+	private final boolean redis = false;
 	/**
 	 * @return the showHelp
 	 */
 	public boolean isShowHelp() {
 		return showHelp;
 	}
-
 	/**
 	 * @return the redisHost
 	 */
 	public String getRedisHost() {
 		return redisHost;
 	}
-
 	/**
 	 * @return the redisPort
 	 */
@@ -64,11 +66,23 @@ public class AdminOptions {
 	public String getXDHomeDir() {
 		return xdHomeDir;
 	}
-
 	/**
 	 * @return the xdHomeDir
 	 */
 	public String getXdHomeDir() {
 		return xdHomeDir;
 	}
+	/**
+	 * @return the embeddedContainer
+	 */
+	public boolean isEmbeddedContainer() {
+		return embeddedContainer;
+	}
+	boolean isRedis() {
+		return redis;
+	}
+
+
+
+
 }

@@ -15,14 +15,6 @@
  */
 package org.springframework.xd.dirt.stream;
 
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.xd.dirt.launcher.RedisContainerLauncher;
-import org.springframework.xd.dirt.stream.RedisStreamDeployer;
-import org.springframework.xd.dirt.stream.RedisStreamServer;
 /**
  * @author Winston Koh
  * @since 1.0
@@ -30,28 +22,28 @@ import org.springframework.xd.dirt.stream.RedisStreamServer;
  */
 public class RedisStreamServerTests {
 
-	@Test
-	public void testSimpleServer() {
-		LettuceConnectionFactory connectionFactory = null;
-		try {
-			RedisContainerLauncher.main(new String[0]);
-			connectionFactory = new LettuceConnectionFactory();
-			connectionFactory.afterPropertiesSet();
-			RedisStreamDeployer streamDeployer = new RedisStreamDeployer(connectionFactory);
-			RedisStreamServer server = new RedisStreamServer(streamDeployer);
-			server.afterPropertiesSet();
-			server.start();
-			server.stop();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			fail("STREAM SERVER IS NOT AVAILABLE");
-		}
-		finally {
-			if (connectionFactory != null) {
-				connectionFactory.destroy();
-			}
-		}
-	}
+//	@Test
+//	public void testSimpleServer() {
+//		LettuceConnectionFactory connectionFactory = null;
+//		try {
+//			RedisContainerLauncher.main(new String[0]);
+//			connectionFactory = new LettuceConnectionFactory();
+//			connectionFactory.afterPropertiesSet();
+//			RedisStreamDeployer streamDeployer = new RedisStreamDeployer(connectionFactory);
+//			RedisStreamServer server = new RedisStreamServer(streamDeployer);
+//			server.afterPropertiesSet();
+//			server.start();
+//			server.stop();
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//			fail("STREAM SERVER IS NOT AVAILABLE");
+//		}
+//		finally {
+//			if (connectionFactory != null) {
+//				connectionFactory.destroy();
+//			}
+//		}
+//	}
 
 }

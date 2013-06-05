@@ -16,16 +16,6 @@
 
 package org.springframework.xd.dirt.stream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.springframework.data.redis.RedisConnectionFailureException;
-import org.springframework.integration.Message;
-import org.springframework.integration.MessagingException;
-import org.springframework.integration.channel.DirectChannel;
-import org.springframework.integration.core.MessageHandler;
-import org.springframework.xd.dirt.module.FileModuleRegistry;
-import org.springframework.xd.dirt.module.ModuleDeployer;
 
 /**
  * This is a temporary "server" for the REST API. Currently it only handles simple
@@ -41,34 +31,6 @@ public class DefaultStreamServer extends StreamServer {
 
 	public DefaultStreamServer(StreamDeployer streamDeployer) {
 		super(streamDeployer);
-	}
-
-	public static void main(String[] args) {
-		try {
-			bootstrap(args);
-		}
-		catch(RedisConnectionFailureException e) {
-			final Log logger = LogFactory.getLog(DefaultStreamServer.class);
-			logger.fatal(e.getMessage());
-			System.exit(1);
-		}
-	}
-
-	private static void bootstrap(String[] args) {
-		// TODO bootstrap from app context and simply inject 'input' as the outputChannel below
-		DirectChannel outputChannel = new DirectChannel();
-		final ModuleDeployer moduleDeployer = new ModuleDeployer(new FileModuleRegistry("foo")); //TODO: ${xd.home}/modules
-		outputChannel.subscribe(new MessageHandler() {
-
-			@Override
-			public void handleMessage(Message<?> message) throws MessagingException {
-				moduleDeployer.handleMessage(message);
-			}
-		});
-		StreamDeployer streamDeployer = new DefaultStreamDeployer(outputChannel);
-		StreamServer server = new DefaultStreamServer(streamDeployer);
-		server.afterPropertiesSet();
-		server.start();
 	}
 
 }

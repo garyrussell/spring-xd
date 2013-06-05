@@ -3,23 +3,23 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:int="http://www.springframework.org/schema/integration"
 	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-3.0.xsd
 		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+ 	<import resource="plugins/*.xml" />
 
 	<bean id="channelRegistry"
 		class="org.springframework.integration.x.channel.registry.LocalChannelRegistry">
 	</bean>
-	
-	<int:channel id="moduleEventsOut">
-		<int:queue/>
-	</int:channel>
 
-	<task:executor id="module-events" pool-size="1"/>
+ 	<bean id="deployer" class="org.springframework.xd.dirt.stream.DefaultStreamDeployer">
+ 		<constructor-arg ref="input" />
+ 	</bean>
 
-	<int:service-activator input-channel="moduleEventsOut" ref="handler">
-		<int:poller fixed-rate="10" task-executor="module-events"/>
-	</int:service-activator>
-
-	<int:logging-channel-adapter id="moduleContainerEventsOut"/>
+ 	<bean id="server" class="org.springframework.xd.dirt.stream.DefaultStreamServer">
+ 		<constructor-arg ref="deployer" />
+ 	</bean>
 </beans>

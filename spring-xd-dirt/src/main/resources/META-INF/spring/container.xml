@@ -25,9 +25,4 @@
 		<constructor-arg value="${xd.home}/modules"/>
 	</bean>
 
-	<int-event:inbound-channel-adapter channel="moduleEventsOut" event-types="org.springframework.xd.dirt.event.AbstractModuleEvent"/>
-
-	<int-event:inbound-channel-adapter channel="moduleContainerEventsOut" event-types="org.springframework.xd.dirt.event.AbstractContainerEvent"/>
-
-
 </beans>
