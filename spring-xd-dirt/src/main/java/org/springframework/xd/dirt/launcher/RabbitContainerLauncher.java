@@ -67,7 +67,7 @@ public class RabbitContainerLauncher extends AbstractContainerLauncher {
 	protected void logErrorInfo(Throwable cause) {
 		if (cause instanceof AmqpConnectException) {
 			System.err.println("RabbitMQ does not seem to be running. " +
-					"Did you install and start RabbitMQ?" +
+					"Did you install and start RabbitMQ? " +
 					"Please see the Getting Started section of the guide for instructions.");
 		}
 	}

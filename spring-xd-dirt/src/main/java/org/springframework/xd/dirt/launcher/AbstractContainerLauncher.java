@@ -19,7 +19,6 @@ package org.springframework.xd.dirt.launcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ApplicationListener;
@@ -55,9 +54,9 @@ public abstract class AbstractContainerLauncher implements ContainerLauncher, Ap
 			this.eventPublisher.publishEvent(new ContainerStartedEvent(container));
 			return container;
 		}
-		catch (BeanCreationException e) {
-			logger.fatal(e.getCause().getMessage());
-			this.logErrorInfo(e.getCause());
+		catch (Exception e) {
+			logger.fatal(e.getClass().getName() + " : " + e.getMessage());
+			this.logErrorInfo(e);
 			System.exit(1);
 		}
 		return null;
