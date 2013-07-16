@@ -26,6 +26,7 @@ import org.springframework.util.Assert;
 /**
  * @author Glenn Renfro
  * @author Gary Russell
+ * @author David Turanski
  */
 public abstract class AbstractPlugin implements Plugin{
 
@@ -37,6 +38,8 @@ public abstract class AbstractPlugin implements Plugin{
 	 */
 	protected String postProcessContextPath;
 
+	private ConfigurableApplicationContext sharedContext;
+
 	/**
 	 * Process the {@link Module} and add the Application Context resources
 	 * necessary to setup the Batch Job.
@@ -47,9 +50,20 @@ public abstract class AbstractPlugin implements Plugin{
 		List<String> componentPaths = componentPathsSelector(module);
 		for(String path: componentPaths) {
 			addComponents(module, path);
-			configureProperties(module);
 		}
+		configureProperties(module, group, index);
+		processModuleInternal(module, group, index);
 	}
+
+	/**
+	 * Hook for implementation specific module processing
+	 *
+	 * @param module The module that is being initialized
+	 * @param group The group the module belongs
+	 * @param index The offset of the module in the stream
+	 */
+	protected abstract void processModuleInternal(Module module, String group, int index);
+
 	/**
 	 * Establish the configuration file path and names required to setup the context for the
 	 * type of module you are deploying.
@@ -71,7 +85,7 @@ public abstract class AbstractPlugin implements Plugin{
 	@Override
 	public void postProcessSharedContext(ConfigurableApplicationContext context){
 		if(postProcessContextPath != null){
-			addBeanFactoryPostProcessor(context, postProcessContextPath);
+			addBeanFactoryPostProcessor(sharedContext, postProcessContextPath);
 		}
 	}
 

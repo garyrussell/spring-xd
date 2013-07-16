@@ -81,6 +81,7 @@ public class ModuleDeployer extends AbstractMessageHandler
 		for(Plugin plugin: plugins.values()) {
 			plugin.postProcessSharedContext(commonContext);
 		}
+		//TODO: Do we need this?
 		commonContext.refresh();
 		this.commonContext = commonContext;
 	}
@@ -137,15 +138,17 @@ public class ModuleDeployer extends AbstractMessageHandler
 	public void undeploy(ModuleDeploymentRequest request) {
 		String group = request.getGroup();
 		Map<Integer, Module> modules = this.deployedModules.get(group);
-		int index = request.getIndex();
-		Module module = modules.remove(index);
-		if (modules.size() == 0) {
-			this.deployedModules.remove(group);
-		}
-		if (module != null) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("removed " + module.getType() + " module: " + group +
-						":" + module.getName() + ":" + index);
+		if (modules != null) {
+			int index = request.getIndex();
+			Module module = modules.remove(index);
+			if (modules.size() == 0) {
+				this.deployedModules.remove(group);
+			}
+			if (module != null) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("removed " + module.getType() + " module: " + group +
+							":" + module.getName() + ":" + index);
+				}
 			}
 			// TODO: add beforeShutdown and/or afterShutdown callbacks?
 			module.stop();
