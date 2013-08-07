@@ -14,7 +14,10 @@
 
 	<router input-channel="input" expression="${binary:false} ? 'files' : 'appendNewline'"/>
 
-	<transformer input-channel="appendNewline" expression="payload + @newline" output-channel="files"/>
+	<chain input-channel="appendNewline" output-channel="files">
+		<object-to-string-transformer/>
+		<transformer expression="payload + @newline"/>
+	</chain>
 
 	<beans:bean id="newline" class="java.lang.String">
 		<beans:constructor-arg value="#{systemProperties['line.separator']}"/>
