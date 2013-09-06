@@ -36,6 +36,8 @@ import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.channel.interceptor.WireTap;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.xd.tuple.Tuple;
+import org.springframework.xd.tuple.TupleBuilder;
 
 /**
  * @author Gary Russell
@@ -78,6 +80,36 @@ public abstract class AbstractChannelRegistryTests {
 		assertEquals("foo", inbound.getPayload());
 		assertNull(inbound.getHeaders().get(ChannelRegistrySupport.ORIGINAL_CONTENT_TYPE_HEADER));
 		assertEquals("foo/bar", inbound.getHeaders().get(MessageHeaders.CONTENT_TYPE));
+	}
+
+	@Test
+	public void testSendAndReceiveTuple() throws Exception {
+		ChannelRegistry registry = getRegistry();
+		DirectChannel moduleOutputChannel = new DirectChannel();
+		QueueChannel moduleInputChannel = new QueueChannel();
+		registry.createOutbound("qux.0", moduleOutputChannel, false);
+		registry.createInbound("qux.0", moduleInputChannel, ALL, false);
+		Tuple tuple = new TupleBuilder().of("foo", "bar");
+		Message<?> message = MessageBuilder.withPayload(tuple).build();
+		moduleOutputChannel.send(message);
+		Message<?> inbound = moduleInputChannel.receive(5000);
+		assertNotNull(inbound);
+		assertEquals(tuple, inbound.getPayload());
+	}
+
+	@Test
+	public void testSendAndReceivePojo() throws Exception {
+		ChannelRegistry registry = getRegistry();
+		DirectChannel moduleOutputChannel = new DirectChannel();
+		QueueChannel moduleInputChannel = new QueueChannel();
+		registry.createOutbound("qix.0", moduleOutputChannel, false);
+		registry.createInbound("qix.0", moduleInputChannel, ALL, false);
+		Foo foo = new Foo("bar");
+		Message<?> message = MessageBuilder.withPayload(foo).build();
+		moduleOutputChannel.send(message);
+		Message<?> inbound = moduleInputChannel.receive(5000);
+		assertNotNull(inbound);
+		assertEquals(foo, inbound.getPayload());
 	}
 
 	@Test
@@ -236,4 +268,58 @@ public abstract class AbstractChannelRegistryTests {
 
 	protected abstract ChannelRegistry getRegistry() throws Exception;
 
+	private static class Foo {
+
+		private String bar;
+
+		@SuppressWarnings("unused")
+		public Foo() {
+		}
+
+		public Foo(String bar) {
+			this.bar = bar;
+		}
+
+		@SuppressWarnings("unused")
+		public String getBar() {
+			return bar;
+		}
+
+		@SuppressWarnings("unused")
+		public void setBar(String bar) {
+			this.bar = bar;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((bar == null) ? 0 : bar.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (getClass() != obj.getClass()) {
+				return false;
+			}
+			Foo other = (Foo) obj;
+			if (bar == null) {
+				if (other.bar != null) {
+					return false;
+				}
+			}
+			else if (!bar.equals(other.bar)) {
+				return false;
+			}
+			return true;
+		}
+
+	}
 }
