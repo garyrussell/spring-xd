@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="counterRepository" class="org.springframework.xd.analytics.metrics.memory.InMemoryCounterRepository">
-		<qualifier value="simple" />
+<!-- 		<qualifier value="simple" /> -->
 	</bean>
 
 	<bean id="fieldValueCounterRepository" class="org.springframework.xd.analytics.metrics.memory.InMemoryFieldValueCounterRepository" />
