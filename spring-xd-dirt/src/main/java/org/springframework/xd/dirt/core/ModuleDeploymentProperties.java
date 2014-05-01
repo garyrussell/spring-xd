@@ -16,16 +16,22 @@
 
 package org.springframework.xd.dirt.core;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.springframework.xd.tuple.Tuple;
+import org.springframework.xd.tuple.TupleBuilder;
 
 /**
  * Deployment properties for a module.
  *
  * @author Mark Fisher
+ * @author Gary Russell
  */
 public class ModuleDeploymentProperties implements Map<String, String> {
 
@@ -42,7 +48,7 @@ public class ModuleDeploymentProperties implements Map<String, String> {
 	/**
 	 * The underlying map.
 	 */
-	private final Map<String, String> map = new HashMap<String, String>();
+	private final Map<String, String> map = new LinkedHashMap<String, String>();
 
 	/**
 	 * Create a map to hold module deployment properties. The only initial value will be a count of 1.
@@ -63,9 +69,9 @@ public class ModuleDeploymentProperties implements Map<String, String> {
 	}
 
 	/**
-	 * Specify the number of container instances this module should be deployed to. A value of 0 indicates that this module should
-	 * be deployed to all containers in the {@link #group}. If {@code group} is null and the value is 0, this module
-	 * should be deployed to all containers.
+	 * Specify the number of container instances this module should be deployed to. A value of 0 indicates that this
+	 * module should be deployed to all containers in the {@link #group}. If {@code group} is null and the value is 0,
+	 * this module should be deployed to all containers.
 	 */
 	public ModuleDeploymentProperties setCount(int count) {
 		put(COUNT_KEY, String.valueOf(count));
@@ -73,7 +79,8 @@ public class ModuleDeploymentProperties implements Map<String, String> {
 	}
 
 	/**
-	 * Return the criteria expression to evaluate against container attributes to determine deployment candidates for this module.
+	 * Return the criteria expression to evaluate against container attributes to determine deployment candidates for
+	 * this module.
 	 *
 	 * @return criteria expression or {@code null} if no criteria expression was specified.
 	 */
@@ -82,7 +89,8 @@ public class ModuleDeploymentProperties implements Map<String, String> {
 	}
 
 	/**
-	 * Specify the criteria expression to evaluate against container attributes to determine deployment candidates for this module.
+	 * Specify the criteria expression to evaluate against container attributes to determine deployment candidates for
+	 * this module.
 	 */
 	public ModuleDeploymentProperties setCriteria(String criteria) {
 		put(CRITERIA_KEY, criteria);
@@ -191,6 +199,12 @@ public class ModuleDeploymentProperties implements Map<String, String> {
 	@Override
 	public String toString() {
 		return map.toString();
+	}
+
+	public Tuple asTuple() {
+		List<String> keys = new ArrayList<String>(this.map.keySet());
+		List<Object> values = new ArrayList<Object>(this.map.values());
+		return TupleBuilder.tuple().ofNamesAndValues(keys, values);
 	}
 
 	/**
