@@ -40,6 +40,7 @@ import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.converter.ContentTypeResolver;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.util.MimeType;
+import org.springframework.xd.dirt.core.ModuleDeploymentProperties;
 import org.springframework.xd.tuple.DefaultTuple;
 import org.springframework.xd.tuple.Tuple;
 import org.springframework.xd.tuple.TupleBuilder;
@@ -230,27 +231,31 @@ public class MessageBusSupportTests {
 	public class TestMessageBus extends MessageBusSupport {
 
 		@Override
-		public void bindConsumer(String name, MessageChannel channel) {
+		public void bindConsumer(String name, MessageChannel channel, ModuleDeploymentProperties properties) {
 		}
 
 		@Override
-		public void bindPubSubConsumer(String name, MessageChannel moduleInputChannel) {
+		public void bindPubSubConsumer(String name, MessageChannel moduleInputChannel,
+				ModuleDeploymentProperties properties) {
 		}
 
 		@Override
-		public void bindPubSubProducer(String name, MessageChannel moduleOutputChannel) {
+		public void bindPubSubProducer(String name, MessageChannel moduleOutputChannel,
+				ModuleDeploymentProperties properties) {
 		}
 
 		@Override
-		public void bindProducer(String name, MessageChannel channel) {
+		public void bindProducer(String name, MessageChannel channel, ModuleDeploymentProperties properties) {
 		}
 
 		@Override
-		public void bindRequestor(String name, MessageChannel requests, MessageChannel replies) {
+		public void bindRequestor(String name, MessageChannel requests, MessageChannel replies,
+				ModuleDeploymentProperties properties) {
 		}
 
 		@Override
-		public void bindReplier(String name, MessageChannel requests, MessageChannel replies) {
+		public void bindReplier(String name, MessageChannel requests, MessageChannel replies,
+				ModuleDeploymentProperties properties) {
 		}
 
 	}

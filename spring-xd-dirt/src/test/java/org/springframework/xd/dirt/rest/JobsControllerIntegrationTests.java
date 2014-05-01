@@ -125,13 +125,13 @@ public class JobsControllerIntegrationTests extends AbstractControllerIntegratio
 	@Test
 	public void testSuccessfulJobLaunch() throws Exception {
 		QueueChannel channel = new QueueChannel();
-		messageBus.bindConsumer("job:joblaunch", channel);
+		messageBus.bindConsumer("job:joblaunch", channel, null);
 		mockMvc.perform(
 				post("/jobs").param("name", "joblaunch").param("definition", JOB_DEFINITION).accept(
 						MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
 		mockMvc.perform(
 				put("/jobs/{name}/launch", "joblaunch").accept(MediaType.APPLICATION_JSON)).andExpect(
-						status().isOk());
+				status().isOk());
 		assertNotNull(channel.receive(3000));
 	}
 
@@ -156,7 +156,7 @@ public class JobsControllerIntegrationTests extends AbstractControllerIntegratio
 
 		mockMvc.perform(get("/jobs").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(
 				jsonPath("$.content", Matchers.hasSize(2))).andExpect(jsonPath("$.content[0].name").value("job1")).andExpect(
-						jsonPath("$.content[1].name").value("job2"));
+				jsonPath("$.content[1].name").value("job2"));
 	}
 
 	@Test
@@ -199,7 +199,7 @@ public class JobsControllerIntegrationTests extends AbstractControllerIntegratio
 	public void testInvalidDefinitionCreate() throws Exception {
 		mockMvc.perform(
 				post("/jobs").param("name", "job1").param("definition", "job adsfa").accept(MediaType.APPLICATION_JSON)).andExpect(
-						status().isBadRequest());
+				status().isBadRequest());
 
 		mockMvc.perform(get("/jobs").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(
 				jsonPath("$.content", Matchers.hasSize(0)));
@@ -229,7 +229,7 @@ public class JobsControllerIntegrationTests extends AbstractControllerIntegratio
 		mockMvc.perform(
 				post("/jobs").param("name", "mydupejob").param("definition", "job adsfa").accept(
 						MediaType.APPLICATION_JSON))
-				.andExpect(status().isBadRequest()).andExpect(
-						jsonPath("$[0].message", Matchers.is("Batch Job with the name mydupejob already exists")));
+						.andExpect(status().isBadRequest()).andExpect(
+								jsonPath("$[0].message", Matchers.is("Batch Job with the name mydupejob already exists")));
 	}
 }

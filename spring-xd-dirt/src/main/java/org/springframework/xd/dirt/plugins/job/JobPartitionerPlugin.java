@@ -25,7 +25,7 @@ import org.springframework.xd.module.core.Module;
 
 /**
  * Plugin to enable job partitioning.
- * 
+ *
  * @author Gary Russell
  * @author Ilayaperumal Gopinathan
  * @since 1.0
@@ -63,14 +63,14 @@ public class JobPartitionerPlugin extends AbstractJobPlugin {
 		MessageChannel partitionsIn = module.getComponent(JOB_PARTIONER_REPLY_CHANNEL, MessageChannel.class);
 		Assert.notNull(partitionsIn, "Partitioned jobs must have a " + JOB_PARTIONER_REPLY_CHANNEL);
 		String name = md.getGroup() + "." + md.getIndex();
-		messageBus.bindRequestor(name, partitionsOut, partitionsIn);
+		messageBus.bindRequestor(name, partitionsOut, partitionsIn, null);
 
 		MessageChannel stepExecutionsIn = module.getComponent(JOB_STEP_EXECUTION_REQUEST_CHANNEL, MessageChannel.class);
 		Assert.notNull(stepExecutionsIn, "Partitioned jobs must have a " + JOB_STEP_EXECUTION_REQUEST_CHANNEL);
 		MessageChannel stepExecutionResultsOut = module.getComponent(JOB_STEP_EXECUTION_REPLY_CHANNEL,
 				MessageChannel.class);
 		Assert.notNull(stepExecutionResultsOut, "Partitioned jobs must have a " + JOB_STEP_EXECUTION_REPLY_CHANNEL);
-		messageBus.bindReplier(name, stepExecutionsIn, stepExecutionResultsOut);
+		messageBus.bindReplier(name, stepExecutionsIn, stepExecutionResultsOut, null);
 	}
 
 	private void unbindPartitionedJob(Module module) {

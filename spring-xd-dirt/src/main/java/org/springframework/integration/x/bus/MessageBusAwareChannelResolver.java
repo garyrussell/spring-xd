@@ -27,7 +27,7 @@ import org.springframework.messaging.core.BeanFactoryMessageChannelDestinationRe
 /**
  * A {@link org.springframework.messaging.core.DestinationResolver} implementation that first checks for any channel
  * whose name begins with a colon in the {@link MessageBus}.
- * 
+ *
  * @author Mark Fisher
  */
 public class MessageBusAwareChannelResolver extends BeanFactoryMessageChannelDestinationResolver {
@@ -50,11 +50,11 @@ public class MessageBusAwareChannelResolver extends BeanFactoryMessageChannelDes
 				String type = tokens[0];
 				if ("queue".equals(type)) {
 					channel = new DirectChannel();
-					messageBus.bindProducer(name, channel);
+					messageBus.bindProducer(name, channel, null);
 				}
 				else if ("topic".equals(type)) {
 					channel = new PublishSubscribeChannel();
-					messageBus.bindPubSubProducer(name, channel);
+					messageBus.bindPubSubProducer(name, channel, null);
 				}
 				else {
 					throw new IllegalArgumentException("unrecognized channel type: " + type);

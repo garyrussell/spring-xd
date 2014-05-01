@@ -47,6 +47,7 @@ import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.SubscribableChannel;
 import org.springframework.util.Assert;
+import org.springframework.xd.dirt.core.ModuleDeploymentProperties;
 
 /**
  * A {@link MessageBus} implementation backed by Redis.
@@ -81,7 +82,7 @@ public class RedisMessageBus extends MessageBusSupport implements DisposableBean
 	}
 
 	@Override
-	public void bindConsumer(final String name, MessageChannel moduleInputChannel) {
+	public void bindConsumer(final String name, MessageChannel moduleInputChannel, ModuleDeploymentProperties properties) {
 		RedisQueueMessageDrivenEndpoint adapter = new RedisQueueMessageDrivenEndpoint("queue." + name,
 				this.connectionFactory);
 		adapter.setBeanFactory(this.getBeanFactory());
@@ -90,7 +91,8 @@ public class RedisMessageBus extends MessageBusSupport implements DisposableBean
 	}
 
 	@Override
-	public void bindPubSubConsumer(final String name, MessageChannel moduleInputChannel) {
+	public void bindPubSubConsumer(final String name, MessageChannel moduleInputChannel,
+			ModuleDeploymentProperties properties) {
 		RedisInboundChannelAdapter adapter = new RedisInboundChannelAdapter(this.connectionFactory);
 		adapter.setBeanFactory(this.getBeanFactory());
 		adapter.setSerializer(null);
@@ -116,7 +118,8 @@ public class RedisMessageBus extends MessageBusSupport implements DisposableBean
 	}
 
 	@Override
-	public void bindProducer(final String name, MessageChannel moduleOutputChannel) {
+	public void bindProducer(final String name, MessageChannel moduleOutputChannel,
+			ModuleDeploymentProperties properties) {
 		Assert.isInstanceOf(SubscribableChannel.class, moduleOutputChannel);
 		RedisQueueOutboundChannelAdapter queue = new RedisQueueOutboundChannelAdapter("queue." + name,
 				connectionFactory);
@@ -126,7 +129,8 @@ public class RedisMessageBus extends MessageBusSupport implements DisposableBean
 	}
 
 	@Override
-	public void bindPubSubProducer(final String name, MessageChannel moduleOutputChannel) {
+	public void bindPubSubProducer(final String name, MessageChannel moduleOutputChannel,
+			ModuleDeploymentProperties properties) {
 		RedisPublishingMessageHandler topic = new RedisPublishingMessageHandler(connectionFactory);
 		topic.setBeanFactory(this.getBeanFactory());
 		topic.setTopic("topic." + name);
@@ -152,7 +156,8 @@ public class RedisMessageBus extends MessageBusSupport implements DisposableBean
 	}
 
 	@Override
-	public void bindRequestor(String name, MessageChannel requests, MessageChannel replies) {
+	public void bindRequestor(String name, MessageChannel requests, MessageChannel replies,
+			ModuleDeploymentProperties properties) {
 		if (logger.isInfoEnabled()) {
 			logger.info("binding requestor: " + name);
 		}
@@ -170,7 +175,8 @@ public class RedisMessageBus extends MessageBusSupport implements DisposableBean
 	}
 
 	@Override
-	public void bindReplier(String name, MessageChannel requests, MessageChannel replies) {
+	public void bindReplier(String name, MessageChannel requests, MessageChannel replies,
+			ModuleDeploymentProperties properties) {
 		if (logger.isInfoEnabled()) {
 			logger.info("binding replier: " + name);
 		}

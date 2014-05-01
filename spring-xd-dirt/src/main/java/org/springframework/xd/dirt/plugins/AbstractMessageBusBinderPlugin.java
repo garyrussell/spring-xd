@@ -83,19 +83,19 @@ public abstract class AbstractMessageBusBinderPlugin extends AbstractPlugin {
 
 	private void bindMessageConsumer(MessageChannel inputChannel, String inputChannelName) {
 		if (isChannelPubSub(inputChannelName)) {
-			messageBus.bindPubSubConsumer(inputChannelName, inputChannel);
+			messageBus.bindPubSubConsumer(inputChannelName, inputChannel, null);
 		}
 		else {
-			messageBus.bindConsumer(inputChannelName, inputChannel);
+			messageBus.bindConsumer(inputChannelName, inputChannel, null);
 		}
 	}
 
 	private void bindMessageProducer(MessageChannel outputChannel, String outputChannelName) {
 		if (isChannelPubSub(outputChannelName)) {
-			messageBus.bindPubSubProducer(outputChannelName, outputChannel);
+			messageBus.bindPubSubProducer(outputChannelName, outputChannel, null);
 		}
 		else {
-			messageBus.bindProducer(outputChannelName, outputChannel);
+			messageBus.bindProducer(outputChannelName, outputChannel, null);
 		}
 	}
 
@@ -110,7 +110,7 @@ public abstract class AbstractMessageBusBinderPlugin extends AbstractPlugin {
 		if (outputChannel instanceof ChannelInterceptorAware) {
 			String tapChannelName = buildTapChannelName(module);
 			MessageChannel tapChannel = tapOutputChannel(tapChannelName, (ChannelInterceptorAware) outputChannel);
-			messageBus.bindPubSubProducer(tapChannelName, tapChannel);
+			messageBus.bindPubSubProducer(tapChannelName, tapChannel, null);
 		}
 		else {
 			if (logger.isDebugEnabled()) {

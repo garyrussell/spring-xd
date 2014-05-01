@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.messaging.MessageChannel;
+import org.springframework.xd.dirt.core.ModuleDeploymentProperties;
 
 
 /**
@@ -42,38 +43,40 @@ public abstract class AbstractTestMessageBus implements MessageBus {
 	}
 
 	@Override
-	public void bindConsumer(String name, MessageChannel moduleInputChannel) {
-		messageBus.bindConsumer(name, moduleInputChannel);
+	public void bindConsumer(String name, MessageChannel moduleInputChannel, ModuleDeploymentProperties properties) {
+		messageBus.bindConsumer(name, moduleInputChannel, properties);
 		queues.add(name);
 	}
 
 	@Override
-	public void bindPubSubConsumer(String name, MessageChannel inputChannel) {
-		messageBus.bindPubSubConsumer(name, inputChannel);
+	public void bindPubSubConsumer(String name, MessageChannel inputChannel, ModuleDeploymentProperties properties) {
+		messageBus.bindPubSubConsumer(name, inputChannel, properties);
 		addTopic(name);
 	}
 
 	@Override
-	public void bindProducer(String name, MessageChannel moduleOutputChannel) {
-		messageBus.bindProducer(name, moduleOutputChannel);
+	public void bindProducer(String name, MessageChannel moduleOutputChannel, ModuleDeploymentProperties properties) {
+		messageBus.bindProducer(name, moduleOutputChannel, properties);
 		queues.add(name);
 	}
 
 	@Override
-	public void bindPubSubProducer(String name, MessageChannel outputChannel) {
-		messageBus.bindPubSubProducer(name, outputChannel);
+	public void bindPubSubProducer(String name, MessageChannel outputChannel, ModuleDeploymentProperties properties) {
+		messageBus.bindPubSubProducer(name, outputChannel, properties);
 		addTopic(name);
 	}
 
 	@Override
-	public void bindRequestor(String name, MessageChannel requests, MessageChannel replies) {
-		messageBus.bindRequestor(name, requests, replies);
+	public void bindRequestor(String name, MessageChannel requests, MessageChannel replies,
+			ModuleDeploymentProperties properties) {
+		messageBus.bindRequestor(name, requests, replies, properties);
 		queues.add(name + ".requests");
 	}
 
 	@Override
-	public void bindReplier(String name, MessageChannel requests, MessageChannel replies) {
-		messageBus.bindReplier(name, requests, replies);
+	public void bindReplier(String name, MessageChannel requests, MessageChannel replies,
+			ModuleDeploymentProperties properties) {
+		messageBus.bindReplier(name, requests, replies, properties);
 		queues.add(name + ".requests");
 	}
 

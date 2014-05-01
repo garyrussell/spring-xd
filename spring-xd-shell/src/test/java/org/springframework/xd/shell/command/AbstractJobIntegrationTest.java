@@ -282,7 +282,7 @@ public abstract class AbstractJobIntegrationTest extends AbstractShellIntegratio
 		String streamName = generateStreamName();
 		CommandResult cr = getShell().executeCommand(
 				"stream create --name " + streamName + " --definition \"trigger --fixedDelay=" + fixedDelay
-						+ " > " + getJobLaunchQueue(jobName) + "\" --deploy true");
+				+ " > " + getJobLaunchQueue(jobName) + "\" --deploy true");
 		streams.add(streamName);
 		waitForJobCompletion(jobName);
 		checkForSuccess(cr);
@@ -374,7 +374,7 @@ public abstract class AbstractJobIntegrationTest extends AbstractShellIntegratio
 	private void bindJobTap(String jobName) {
 		MessageChannel alreadyBound = jobTapChannels.putIfAbsent(jobName, new QueueChannel());
 		if (alreadyBound == null) {
-			getMessageBus().bindPubSubConsumer("tap:job:" + jobName, jobTapChannels.get(jobName));
+			getMessageBus().bindPubSubConsumer("tap:job:" + jobName, jobTapChannels.get(jobName), null);
 		}
 	}
 

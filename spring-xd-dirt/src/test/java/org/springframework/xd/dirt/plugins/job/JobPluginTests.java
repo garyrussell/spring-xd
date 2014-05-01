@@ -61,6 +61,7 @@ import org.springframework.messaging.support.GenericMessage;
 import org.springframework.validation.BindException;
 import org.springframework.xd.batch.hsqldb.server.HsqlDatasourceConfiguration;
 import org.springframework.xd.batch.hsqldb.server.HsqlServerApplication;
+import org.springframework.xd.dirt.core.ModuleDeploymentProperties;
 import org.springframework.xd.module.DeploymentMetadata;
 import org.springframework.xd.module.ModuleDefinition;
 import org.springframework.xd.module.ModuleType;
@@ -70,12 +71,12 @@ import org.springframework.xd.module.options.ModuleOptionsMetadata;
 import org.springframework.xd.test.RandomConfigurationSupport;
 
 /**
- * 
+ *
  * @author Michael Minella
  * @author Gunnar Hillert
  * @author Gary Russell
  * @author Ilayaperumal Gopinathan
- * 
+ *
  */
 public class JobPluginTests extends RandomConfigurationSupport {
 
@@ -98,7 +99,7 @@ public class JobPluginTests extends RandomConfigurationSupport {
 
 	@Configuration
 	@ImportResource({ "classpath:/META-INF/spring-xd/batch/batch.xml",
-		"classpath:/META-INF/spring-xd/transports/local-bus.xml" })
+	"classpath:/META-INF/spring-xd/transports/local-bus.xml" })
 	@EnableAutoConfiguration
 	public static class SharedConfiguration {
 
@@ -108,9 +109,9 @@ public class JobPluginTests extends RandomConfigurationSupport {
 	public void setUp() throws Exception {
 		sharedContext = new SpringApplicationBuilder(SharedConfiguration.class, HsqlDatasourceConfiguration.class,
 				HsqlServerApplication.class)
-				.profiles(HsqlServerApplication.HSQLDBSERVER_PROFILE)
-				.properties("spring.datasource.url=jdbc:hsqldb:mem:xdjobrepotest") //
-				.web(false).run();
+		.profiles(HsqlServerApplication.HSQLDBSERVER_PROFILE)
+		.properties("spring.datasource.url=jdbc:hsqldb:mem:xdjobrepotest") //
+		.web(false).run();
 		messageBus = sharedContext.getBean(LocalMessageBus.class);
 		jobPlugin = new JobPlugin(messageBus);
 		jobPartitionerPlugin = new JobPartitionerPlugin(messageBus);
@@ -287,22 +288,22 @@ public class JobPluginTests extends RandomConfigurationSupport {
 		private List<String> producerNames = new ArrayList<String>();
 
 		@Override
-		public void bindConsumer(String name, MessageChannel moduleInputChannel) {
+		public void bindConsumer(String name, MessageChannel moduleInputChannel, ModuleDeploymentProperties properties) {
 			consumerNames.add(name);
 		}
 
 		@Override
-		public void bindPubSubConsumer(String name, MessageChannel inputChannel) {
+		public void bindPubSubConsumer(String name, MessageChannel inputChannel, ModuleDeploymentProperties properties) {
 			Assert.fail("Should not be called.");
 		}
 
 		@Override
-		public void bindProducer(String name, MessageChannel moduleOutputChannel) {
+		public void bindProducer(String name, MessageChannel moduleOutputChannel, ModuleDeploymentProperties properties) {
 			producerNames.add(name);
 		}
 
 		@Override
-		public void bindPubSubProducer(String name, MessageChannel outputChannel) {
+		public void bindPubSubProducer(String name, MessageChannel outputChannel, ModuleDeploymentProperties properties) {
 			producerNames.add(name);
 		}
 
@@ -335,12 +336,14 @@ public class JobPluginTests extends RandomConfigurationSupport {
 		}
 
 		@Override
-		public void bindRequestor(String name, MessageChannel requests, MessageChannel replies) {
+		public void bindRequestor(String name, MessageChannel requests, MessageChannel replies,
+				ModuleDeploymentProperties properties) {
 			Assert.fail("Should not be called.");
 		}
 
 		@Override
-		public void bindReplier(String name, MessageChannel requests, MessageChannel replies) {
+		public void bindReplier(String name, MessageChannel requests, MessageChannel replies,
+				ModuleDeploymentProperties properties) {
 			Assert.fail("Should not be called.");
 		}
 

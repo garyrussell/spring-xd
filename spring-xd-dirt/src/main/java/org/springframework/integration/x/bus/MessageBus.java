@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2013 the original author or authors.
+ * Copyright 2013-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +14,13 @@
 package org.springframework.integration.x.bus;
 
 import org.springframework.messaging.MessageChannel;
+import org.springframework.xd.dirt.core.ModuleDeploymentProperties;
 
 /**
  * A strategy interface used to bind a {@link MessageChannel} to a logical name. The name is intended to identify a
  * logical consumer or producer of messages. This may be a queue, a channel adapter, another message channel, a Spring
  * bean, etc.
- * 
+ *
  * @author Mark Fisher
  * @author David Turanski
  * @author Gary Russell
@@ -31,55 +32,59 @@ public interface MessageBus {
 
 	/**
 	 * Bind a message consumer on a p2p channel
-	 * 
+	 *
 	 * @param name the logical identity of the message source
 	 * @param moduleInputChannel the channel bound as a consumer
+	 * @param properties the deployment properties
 	 */
-	void bindConsumer(String name, MessageChannel moduleInputChannel);
+	void bindConsumer(String name, MessageChannel moduleInputChannel, ModuleDeploymentProperties properties);
 
 
 	/**
 	 * Bind a message consumer on a pub/sub channel
-	 * 
+	 *
 	 * @param name the logical identity of the message source
 	 * @param inputChannel the channel bound as a pub/sub consumer
+	 * @param properties the deployment properties
 	 */
-	void bindPubSubConsumer(final String name, MessageChannel inputChannel);
+	void bindPubSubConsumer(final String name, MessageChannel inputChannel, ModuleDeploymentProperties properties);
 
 	/**
 	 * Bind a message producer on a p2p channel.
-	 * 
+	 *
 	 * @param name the logical identity of the message target
 	 * @param moduleOutputChannel the channel bound as a producer
+	 * @param properties the deployment properties
 	 */
-	void bindProducer(String name, MessageChannel moduleOutputChannel);
+	void bindProducer(String name, MessageChannel moduleOutputChannel, ModuleDeploymentProperties properties);
 
 
 	/**
 	 * Bind a message producer on a pub/sub channel.
-	 * 
+	 *
 	 * @param name the logical identity of the message target
 	 * @param outputChannel the channel bound as a producer
+	 * @param properties the deployment properties
 	 */
-	void bindPubSubProducer(final String name, MessageChannel outputChannel);
+	void bindPubSubProducer(final String name, MessageChannel outputChannel, ModuleDeploymentProperties properties);
 
 	/**
 	 * Unbind an inbound inter-module channel and stop any active components that use the channel.
-	 * 
+	 *
 	 * @param name the channel name
 	 */
 	void unbindConsumers(String name);
 
 	/**
 	 * Unbind an outbound inter-module channel and stop any active components that use the channel.
-	 * 
+	 *
 	 * @param name the channel name
 	 */
 	void unbindProducers(String name);
 
 	/**
 	 * Unbind a specific p2p or pub/sub message consumer
-	 * 
+	 *
 	 * @param name The logical identify of a message source
 	 * @param channel The channel bound as a consumer
 	 */
@@ -87,7 +92,7 @@ public interface MessageBus {
 
 	/**
 	 * Unbind a specific p2p or pub/sub message producer
-	 * 
+	 *
 	 * @param name the logical identity of the message target
 	 * @param channel the channel bound as a producer
 	 */
@@ -95,21 +100,24 @@ public interface MessageBus {
 
 	/**
 	 * Bind a producer that expects async replies. To unbind, invoke unbindProducer() and unbindConsumer().
-	 * 
+	 *
 	 * @param name The name of the requestor.
 	 * @param requests The request channel - sends requests.
 	 * @param replies The reply channel - receives replies.
+	 * @param properties the deployment properties
 	 */
-	void bindRequestor(String name, MessageChannel requests, MessageChannel replies);
+	void bindRequestor(String name, MessageChannel requests, MessageChannel replies,
+			ModuleDeploymentProperties properties);
 
 	/**
 	 * Bind a consumer that handles requests from a requestor and asynchronously sends replies. To unbind, invoke
 	 * unbindProducer() and unbindConsumer().
-	 * 
+	 *
 	 * @param name The name of the requestor for which this replier will handle requests.
 	 * @param requests The request channel - receives requests.
 	 * @param replies The reply channel - sends replies.
+	 * @param properties the deployment properties
 	 */
-	void bindReplier(String name, MessageChannel requests, MessageChannel replies);
+	void bindReplier(String name, MessageChannel requests, MessageChannel replies, ModuleDeploymentProperties properties);
 
 }

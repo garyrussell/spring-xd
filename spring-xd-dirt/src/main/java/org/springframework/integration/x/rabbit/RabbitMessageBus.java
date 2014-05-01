@@ -53,6 +53,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.SubscribableChannel;
 import org.springframework.util.Assert;
+import org.springframework.xd.dirt.core.ModuleDeploymentProperties;
 
 /**
  * A {@link MessageBus} implementation backed by RabbitMQ.
@@ -104,7 +105,7 @@ public class RabbitMessageBus extends MessageBusSupport implements DisposableBea
 		this.rabbitAdmin.afterPropertiesSet();
 		this.mapper = new DefaultAmqpHeaderMapper();
 		this.mapper.setRequestHeaderNames(new String[] { AbstractHeaderMapper.STANDARD_REQUEST_HEADER_NAME_PATTERN,
-			ORIGINAL_CONTENT_TYPE_HEADER });
+				ORIGINAL_CONTENT_TYPE_HEADER });
 		this.setCodec(codec);
 	}
 
@@ -137,7 +138,7 @@ public class RabbitMessageBus extends MessageBusSupport implements DisposableBea
 	}
 
 	@Override
-	public void bindConsumer(final String name, MessageChannel moduleInputChannel) {
+	public void bindConsumer(final String name, MessageChannel moduleInputChannel, ModuleDeploymentProperties properties) {
 		if (logger.isInfoEnabled()) {
 			logger.info("declaring queue for inbound: " + name);
 		}
@@ -147,7 +148,7 @@ public class RabbitMessageBus extends MessageBusSupport implements DisposableBea
 	}
 
 	@Override
-	public void bindPubSubConsumer(String name, MessageChannel moduleInputChannel) {
+	public void bindPubSubConsumer(String name, MessageChannel moduleInputChannel, ModuleDeploymentProperties properties) {
 		FanoutExchange exchange = new FanoutExchange("topic." + name);
 		rabbitAdmin.declareExchange(exchange);
 		Queue queue = new AnonymousQueue();
@@ -196,7 +197,8 @@ public class RabbitMessageBus extends MessageBusSupport implements DisposableBea
 	}
 
 	@Override
-	public void bindProducer(final String name, MessageChannel moduleOutputChannel) {
+	public void bindProducer(final String name, MessageChannel moduleOutputChannel,
+			ModuleDeploymentProperties properties) {
 		if (logger.isInfoEnabled()) {
 			logger.info("declaring queue for outbound: " + name);
 		}
@@ -215,7 +217,8 @@ public class RabbitMessageBus extends MessageBusSupport implements DisposableBea
 	}
 
 	@Override
-	public void bindPubSubProducer(String name, MessageChannel moduleOutputChannel) {
+	public void bindPubSubProducer(String name, MessageChannel moduleOutputChannel,
+			ModuleDeploymentProperties properties) {
 		rabbitAdmin.declareExchange(new FanoutExchange("topic." + name));
 		AmqpOutboundEndpoint fanout = new AmqpOutboundEndpoint(rabbitTemplate);
 		fanout.setBeanFactory(this.getBeanFactory());
@@ -244,7 +247,8 @@ public class RabbitMessageBus extends MessageBusSupport implements DisposableBea
 	}
 
 	@Override
-	public void bindRequestor(String name, MessageChannel requests, MessageChannel replies) {
+	public void bindRequestor(String name, MessageChannel requests, MessageChannel replies,
+			ModuleDeploymentProperties properties) {
 		if (logger.isInfoEnabled()) {
 			logger.info("binding requestor: " + name);
 		}
@@ -263,7 +267,8 @@ public class RabbitMessageBus extends MessageBusSupport implements DisposableBea
 	}
 
 	@Override
-	public void bindReplier(String name, MessageChannel requests, MessageChannel replies) {
+	public void bindReplier(String name, MessageChannel requests, MessageChannel replies,
+			ModuleDeploymentProperties properties) {
 		if (logger.isInfoEnabled()) {
 			logger.info("binding replier: " + name);
 		}

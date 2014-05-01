@@ -54,7 +54,7 @@ public class LocalSingleNodeStreamDeploymentIntegrationTests extends AbstractSin
 
 		DirectChannel testChannel = new DirectChannel();
 		MessageBus bus = integrationSupport.messageBus();
-		bus.bindProducer("queue:x", testChannel);
+		bus.bindProducer("queue:x", testChannel, null);
 		testChannel.send(MessageBuilder.withPayload("y").build());
 		Thread.sleep(2000);
 

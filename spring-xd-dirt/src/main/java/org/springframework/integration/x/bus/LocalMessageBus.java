@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2013 the original author or authors.
+ * Copyright 2013-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -40,6 +40,7 @@ import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.PollableChannel;
 import org.springframework.messaging.SubscribableChannel;
 import org.springframework.util.Assert;
+import org.springframework.xd.dirt.core.ModuleDeploymentProperties;
 
 /**
  * A simple implementation of {@link MessageBus} for in-process use. For inbound and outbound, creates a
@@ -150,12 +151,12 @@ public class LocalMessageBus extends MessageBusSupport implements ApplicationCon
 	 * channel instance.
 	 */
 	@Override
-	public void bindConsumer(String name, MessageChannel moduleInputChannel) {
+	public void bindConsumer(String name, MessageChannel moduleInputChannel, ModuleDeploymentProperties properties) {
 		doRegisterConsumer(name, moduleInputChannel, getChannelProvider(name));
 	}
 
 	@Override
-	public void bindPubSubConsumer(String name, MessageChannel moduleInputChannel) {
+	public void bindPubSubConsumer(String name, MessageChannel moduleInputChannel, ModuleDeploymentProperties properties) {
 		doRegisterConsumer(name, moduleInputChannel, pubsubChannelProvider);
 	}
 
@@ -172,12 +173,13 @@ public class LocalMessageBus extends MessageBusSupport implements ApplicationCon
 	 * channel instance.
 	 */
 	@Override
-	public void bindProducer(String name, MessageChannel moduleOutputChannel) {
+	public void bindProducer(String name, MessageChannel moduleOutputChannel, ModuleDeploymentProperties properties) {
 		doRegisterProducer(name, moduleOutputChannel, getChannelProvider(name));
 	}
 
 	@Override
-	public void bindPubSubProducer(String name, MessageChannel moduleOutputChannel) {
+	public void bindPubSubProducer(String name, MessageChannel moduleOutputChannel,
+			ModuleDeploymentProperties properties) {
 		doRegisterProducer(name, moduleOutputChannel, pubsubChannelProvider);
 	}
 
@@ -190,7 +192,8 @@ public class LocalMessageBus extends MessageBusSupport implements ApplicationCon
 	}
 
 	@Override
-	public void bindRequestor(final String name, MessageChannel requests, final MessageChannel replies) {
+	public void bindRequestor(final String name, MessageChannel requests, final MessageChannel replies,
+			ModuleDeploymentProperties properties) {
 		final MessageChannel requestChannel = this.findOrCreateRequestReplyChannel("requestor." + name);
 		// TODO: handle Pollable ?
 		Assert.isInstanceOf(SubscribableChannel.class, requests);
@@ -213,7 +216,8 @@ public class LocalMessageBus extends MessageBusSupport implements ApplicationCon
 	}
 
 	@Override
-	public void bindReplier(String name, final MessageChannel requests, MessageChannel replies) {
+	public void bindReplier(String name, final MessageChannel requests, MessageChannel replies,
+			ModuleDeploymentProperties properties) {
 		SubscribableChannel requestChannel = this.findOrCreateRequestReplyChannel("requestor." + name);
 		requestChannel.subscribe(new MessageHandler() {
 
