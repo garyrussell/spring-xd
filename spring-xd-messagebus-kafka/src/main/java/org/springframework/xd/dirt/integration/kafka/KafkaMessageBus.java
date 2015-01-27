@@ -467,6 +467,7 @@ public class KafkaMessageBus extends MessageBusSupport {
 		bridgeToModuleChannel.setBeanName(name + ".bridge");
 		adapter.setOutputChannel(bridgeToModuleChannel);
 		adapter.setBeanName("inbound." + name);
+		adapter.setBeanFactory(getBeanFactory());
 		adapter.afterPropertiesSet();
 		adapter.start();
 		Binding consumerBinding = Binding.forConsumer(name, adapter, replies, accessor);
@@ -496,6 +497,7 @@ public class KafkaMessageBus extends MessageBusSupport {
 		bridgeToModuleChannel.setBeanName(name + ".bridge");
 		adapter.setOutputChannel(bridgeToModuleChannel);
 		adapter.setBeanName("inbound." + name);
+		adapter.setBeanFactory(getBeanFactory());
 		adapter.afterPropertiesSet();
 		adapter.start();
 		Binding consumerBinding = Binding.forConsumer(name, adapter, requests, accessor);

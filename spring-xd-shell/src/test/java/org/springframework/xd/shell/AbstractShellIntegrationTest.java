@@ -91,7 +91,7 @@ public abstract class AbstractShellIntegrationTest {
 	public static synchronized void startUp() throws InterruptedException, IOException {
 		RandomConfigurationSupport randomConfigSupport = new RandomConfigurationSupport();
 		if (application == null) {
-			application = new SingleNodeApplication().run("--transport", "local", "--analytics", "redis");
+			application = new SingleNodeApplication().run("--transport", "kafka", "--analytics", "redis");
 			integrationTestSupport = new SingleNodeIntegrationTestSupport(application);
 			integrationTestSupport.addModuleRegistry(new ArchiveModuleRegistry("classpath:/spring-xd/xd/modules"));
 			Bootstrap bootstrap = new Bootstrap(new String[] { "--port", randomConfigSupport.getAdminServerPort() });
