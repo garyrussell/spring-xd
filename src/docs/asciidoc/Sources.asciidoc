@@ -1103,7 +1103,7 @@ This source works by regularly polling MongoDB and emitting the result list, as 
 
 Here is an example:
 ----
-xd:> stream create foo --definition "mongodb --collectionName=orders --pollRate=1000 | log" --deploy
+xd:> stream create foo --definition "mongodb --collectionName=orders --fixedDelay=1 | log" --deploy
 ----
 
 //^source.mongodb

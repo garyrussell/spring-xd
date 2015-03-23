@@ -73,7 +73,7 @@ public class TriggerSourceOptionsMetadata implements ProfileNamesProvider {
 		return !(fixedDelay != null && cron != null);
 	}
 
-	@ModuleOption("number of seconds between executions, expressed in TimeUnits (seconds by default)")
+	@ModuleOption("time delay between executions, expressed in TimeUnits (seconds by default)")
 	public void setFixedDelay(Integer fixedDelay) {
 		this.fixedDelay = fixedDelay;
 	}

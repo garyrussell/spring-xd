@@ -51,7 +51,7 @@ public class PeriodicTriggerMixin {
 		return timeUnit;
 	}
 
-	@ModuleOption("the time unit for the fixed delay")
+	@ModuleOption("the time unit for the fixed and initial delays")
 	public void setTimeUnit(String timeUnit) {
 		this.timeUnit = timeUnit.toUpperCase();
 	}

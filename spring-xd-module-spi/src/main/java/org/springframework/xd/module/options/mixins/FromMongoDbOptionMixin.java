@@ -23,14 +23,15 @@ import org.springframework.xd.module.options.spi.ProfileNamesProvider;
 
 
 /**
- * An option class to mix-in when reading from MongoDB. 
+ * An option class to mix-in when reading from MongoDB.
  *
  * @author Abhinav Gandhi
  */
 public abstract class FromMongoDbOptionMixin implements ProfileNamesProvider {
 
-	private static final String[] USE_SPLITTER = new String[]{"use-splitter"};
-	private static final String[] DONT_USE_SPLITTER = new String[]{"dont-use-splitter"};
+	private static final String[] USE_SPLITTER = new String[] { "use-splitter" };
+
+	private static final String[] DONT_USE_SPLITTER = new String[] { "dont-use-splitter" };
 
 
 	private String query = "{}";
@@ -38,16 +39,16 @@ public abstract class FromMongoDbOptionMixin implements ProfileNamesProvider {
 	private String collectionName;
 
 	private int fixedDelay = 1000;
-	
+
 	private int maxMessages = 1;
 
 	private boolean split = true;
 
 
 	/**
-	 * Has {@code collectionName} default to ${xd.job.name}.  
+	 * Has {@code collectionName} default to ${xd.job.name}.
 	 */
-	@Mixin({MongoDbConnectionMixin.class, PeriodicTriggerMixin.class})
+	@Mixin({ MongoDbConnectionMixin.class, PeriodicTriggerMixin.class })
 	public static class Job extends FromMongoDbOptionMixin {
 
 		public Job() {
@@ -56,9 +57,9 @@ public abstract class FromMongoDbOptionMixin implements ProfileNamesProvider {
 	}
 
 	/**
-	 * Has {@code collectionName} default to ${xd.stream.name}.  
+	 * Has {@code collectionName} default to ${xd.stream.name}.
 	 */
-	@Mixin({MongoDbConnectionMixin.class, PeriodicTriggerMixin.class})
+	@Mixin({ MongoDbConnectionMixin.class, PeriodicTriggerMixin.class })
 	public static class Stream extends FromMongoDbOptionMixin {
 
 		public Stream() {
@@ -67,7 +68,7 @@ public abstract class FromMongoDbOptionMixin implements ProfileNamesProvider {
 	}
 
 	/**
-	 * Subclasses should provide a default value for collectionName. 
+	 * Subclasses should provide a default value for collectionName.
 	 */
 	protected FromMongoDbOptionMixin(String collectionName) {
 		this.collectionName = collectionName;
@@ -78,16 +79,16 @@ public abstract class FromMongoDbOptionMixin implements ProfileNamesProvider {
 		this.collectionName = collectionName;
 	}
 
-	@ModuleOption("the rate at which to poll for data")
+	@ModuleOption("the time delay between polls for data, expressed in TimeUnit (seconds by default)")
 	public void setFixedDelay(int fixedDelay) {
 		this.fixedDelay = fixedDelay;
 	}
-	
+
 	@ModuleOption("the maximum number of messages to get at a time")
 	public void setMaxMessages(int maxMessages) {
 		this.maxMessages = maxMessages;
 	}
-	
+
 	@ModuleOption("the query to make to the mongo db")
 	public void setQuery(String query) {
 		this.query = query;
@@ -101,11 +102,11 @@ public abstract class FromMongoDbOptionMixin implements ProfileNamesProvider {
 	public int getFixedDelay() {
 		return this.fixedDelay;
 	}
-	
+
 	public int getMaxMessages() {
 		return this.maxMessages;
 	}
-	
+
 	public String getQuery() {
 		return this.query;
 	}

@@ -49,7 +49,7 @@ public class TimeSourceOptionsMetadata {
 	}
 
 
-	@ModuleOption("how often to emit a message, expressed in seconds")
+	@ModuleOption("time delay between messages, expressed in TimeUnits (seconds by default)")
 	public void setFixedDelay(int fixedDelay) {
 		this.fixedDelay = fixedDelay;
 	}
