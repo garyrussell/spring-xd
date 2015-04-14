@@ -99,6 +99,7 @@ allprojects {
 		maven { url 'http://repo.spring.io/libs-snapshot' }
 		maven { url 'http://repo.spring.io/plugins-release' }
 		maven { url 'https://repo.eclipse.org/content/repositories/paho-releases' }
+		maven { url 'https://maven.itm.uni-luebeck.de/content/repositories/releases' }
 	}
 }
 
@@ -131,7 +132,7 @@ ext {
 	sqoopVersion = '1.4.5'
 
 	// Also in IO
-	nettyVersion = '3.7.0.Final' // N.B. Reactor depends on Netty 4
+	nettyVersion = '3.9.0.Final' // N.B. Reactor depends on Netty 4
 	hadoopGuavaVersion = '11.0.2' // This is only used by the mini cluster in the spring-xd-batch-extension tests
 	cdh5GuavaVersion = '14.0.1' // This is only used by the CDH 5 module for the xd/lib/cdh5 classpath jars
 	oldGuavaVersion = '15.0'  // This is only used by spring-xd-integration-test, IO uses version 17.0

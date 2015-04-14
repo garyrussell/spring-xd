@@ -80,6 +80,10 @@ task moduleFiles {
 
 // ================ M O D U L E S : S O U R C E S ======================
 
+project('modules.source.coap') {
+    dependencies { runtime	project(":spring-xd-extension-http") }
+}
+
 project('modules.source.mail') {
     dependencies {
         runtime project(":spring-xd-extension-mail")
