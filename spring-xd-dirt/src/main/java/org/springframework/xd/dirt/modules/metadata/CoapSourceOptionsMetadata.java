@@ -25,7 +25,19 @@ import org.springframework.xd.module.options.spi.ModuleOption;
  */
 public class CoapSourceOptionsMetadata {
 
+	private int port = 15683;
+
 	private String servicePath = "/xd";
+
+	public int getPort() {
+		return port;
+	}
+
+	@ModuleOption("the port to listen to")
+	public void setPort(int port) {
+		this.port = port;
+	}
+
 
 	public String getServicePath() {
 		return servicePath;

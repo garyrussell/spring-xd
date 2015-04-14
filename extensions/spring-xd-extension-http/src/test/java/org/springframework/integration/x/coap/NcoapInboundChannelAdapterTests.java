@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.integration.x.http;
+package org.springframework.integration.x.coap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

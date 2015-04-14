@@ -12,6 +12,11 @@
 		<beans:property name="outputChannel" ref="output" />
 	</beans:bean>
 
+	<beans:bean class="org.springframework.integration.x.coap.CfCoapInboundChannelAdapter">
+		<beans:constructor-arg value="${port}" />
+		<beans:property name="outputChannel" ref="output" />
+	</beans:bean>
+
 	<channel id="output"/>
 
 </beans:beans>

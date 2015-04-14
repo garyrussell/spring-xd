@@ -24,6 +24,7 @@ project('spring-xd-extension-http') {
         compile "org.springframework.integration:spring-integration-core"
         compile "io.netty:netty:${nettyVersion}"
         compile "de.uniluebeck.itm:ncoap-core:1.8.2"
+        compile "org.eclipse.californium:californium-core:1.0.0-M3"
         compile "org.springframework:spring-web"
         compile project(":spring-xd-module-spi")
         testCompile project(":spring-xd-test")
