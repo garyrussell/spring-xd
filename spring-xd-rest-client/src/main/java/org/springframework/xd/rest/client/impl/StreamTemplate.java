@@ -26,11 +26,14 @@ import org.springframework.xd.rest.domain.StreamDefinitionResource;
  *
  * @author Eric Bottard
  * @author Ilayaperumal Gopinathan
+ * @author Paul Harris
+ * @author Gary Russell
  */
 public class StreamTemplate extends AbstractResourceTemplate implements StreamOperations {
 
-	StreamTemplate(AbstractTemplate source, String adminUri, String password, String username, String vhost) {
-		super(source, adminUri, password, "streams", username, vhost);
+	StreamTemplate(AbstractTemplate source, String adminUri, String password, String username, String vhost,
+			String busPrefix) {
+		super(source, adminUri, password, "streams", username, vhost, busPrefix);
 	}
 
 	@Override

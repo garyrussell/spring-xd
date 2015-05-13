@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2013 the original author or authors.
+ * Copyright 2002-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,20 @@
 
 package org.springframework.xd.rest.client.impl;
 
+import java.util.Date;
+
 import org.joda.time.DateTime;
+
 import org.springframework.util.Assert;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.xd.rest.client.AggregateCounterOperations;
 import org.springframework.xd.rest.domain.metrics.AggregateCountsResource;
 
-import java.util.Date;
-
 /**
  * Implementation of the Aggregate Counter part of the metrics API.
- * 
+ *
  * @author Ilayaperumal Gopinathan
+ * @author Paul Harris
  */
 public class AggregateCounterTemplate extends AbstractMetricTemplate implements AggregateCounterOperations {
 

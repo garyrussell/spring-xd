@@ -21,8 +21,9 @@ import org.springframework.xd.rest.domain.metrics.GaugeResource;
 
 /**
  * Implementation of the Gauge part of the metrics API.
- * 
+ *
  * @author Ilayaperumal Gopinathan
+ * @author Paul Harris
  */
 public class GaugeTemplate extends AbstractSingleMetricTemplate<GaugeResource> implements GaugeOperations {
 

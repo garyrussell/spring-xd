@@ -22,6 +22,7 @@ import java.util.Map;
  * Operations common to resources like Stream and Job.
  *
  * @author Ilayaperumal Gopinathan
+ * @author Paul Harris
  */
 public interface ResourceOperations {
 
@@ -51,9 +52,8 @@ public interface ResourceOperations {
 	public void destroyAll();
 
 	/**
-	 * Delete Queues and DLQs for a stream, and any exchanges created for taps.
+	 * Remove any bus resources that cannot be automatically removed during undeploy.
 	 */
 	public void cleanBusResources(String name);
-
 
 }

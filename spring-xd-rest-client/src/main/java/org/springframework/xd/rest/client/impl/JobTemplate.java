@@ -16,6 +16,9 @@
 
 package org.springframework.xd.rest.client.impl;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.xd.rest.client.JobOperations;
@@ -25,9 +28,6 @@ import org.springframework.xd.rest.domain.JobInstanceInfoResource;
 import org.springframework.xd.rest.domain.StepExecutionInfoResource;
 import org.springframework.xd.rest.domain.StepExecutionProgressInfoResource;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Implementation of the Job-related part of the API.
  *
@@ -35,11 +35,14 @@ import java.util.List;
  * @author Ilayaperumal Gopinathan
  * @author Gunnar Hillert
  * @author Eric Bottard
+ * @author Paul Harris
+ * @author Gary Russell
  */
 public class JobTemplate extends AbstractResourceTemplate implements JobOperations {
 
-	JobTemplate(AbstractTemplate source, String adminUri, String password, String username, String vhost) {
-		super(source, adminUri, password, "jobs", username, vhost);
+	JobTemplate(AbstractTemplate source, String adminUri, String password, String username, String vhost,
+			String busPrefix) {
+		super(source, adminUri, password, "jobs", username, vhost, busPrefix);
 	}
 
 	@Override
