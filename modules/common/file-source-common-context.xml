@@ -39,7 +39,7 @@
 				<header name="contentType" value="text/plain"/>
 				<header name="file_name"   expression="payload.name"/>
 			</header-enricher>
-			<splitter>
+			<splitter id="iteratingFileSplitter">
 				<beans:bean class="org.springframework.integration.file.splitter.FileSplitter">
 					<beans:constructor-arg value="false"/>
 				</beans:bean>

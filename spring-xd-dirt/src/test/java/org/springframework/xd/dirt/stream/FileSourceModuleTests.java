@@ -16,14 +16,20 @@
 
 package org.springframework.xd.dirt.stream;
 
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
@@ -31,12 +37,21 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.core.env.PropertiesPropertySource;
+import org.springframework.core.env.StandardEnvironment;
 import org.springframework.integration.file.FileHeaders;
+import org.springframework.integration.file.splitter.FileSplitter;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.converter.ContentTypeResolver;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.ReflectionUtils.MethodCallback;
+import org.springframework.util.ReflectionUtils.MethodFilter;
 import org.springframework.xd.dirt.integration.bus.StringConvertingContentTypeResolver;
 import org.springframework.xd.dirt.plugins.ModuleConfigurationException;
 
@@ -207,6 +222,45 @@ public class FileSourceModuleTests extends StreamTestSupport {
 
 	}
 
+	@Test
+	public void testSplitterUsesIterator() throws Exception {
+		System.out.println(System.getProperty("user.dir"));
+		ConfigurableApplicationContext ctx = new FileSystemXmlApplicationContext(new String[] {
+			"../modules/common/file-source-common-context.xml",
+			"classpath:org/springframework/xd/dirt/stream/ppc-context.xml" }, false);
+		StandardEnvironment env = new StandardEnvironment();
+		Properties props = new Properties();
+		props.setProperty("fixedDelay", "5");
+		props.setProperty("timeUnit", "SECONDS");
+		props.setProperty("initialDelay", "0");
+		PropertiesPropertySource pps = new PropertiesPropertySource("props", props);
+		env.getPropertySources().addLast(pps);
+		env.setActiveProfiles("use-contents-with-split");
+		ctx.setEnvironment(env);
+		ctx.refresh();
+		FileSplitter splitter = ctx.getBean(FileSplitter.class);
+		File foo = File.createTempFile("foo", ".txt");
+		final AtomicReference<Method> splitMessage = new AtomicReference<>();
+		ReflectionUtils.doWithMethods(FileSplitter.class, new MethodCallback() {
+
+			@Override
+			public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
+				method.setAccessible(true);
+				splitMessage.set(method);
+			}
+		}, new MethodFilter() {
+
+			@Override
+			public boolean matches(Method method) {
+				return method.getName().equals("splitMessage");
+			}
+		});
+		Object result = splitMessage.get().invoke(splitter, new GenericMessage<File>(foo));
+		assertThat(result, instanceOf(Iterator.class));
+		ctx.close();
+		foo.delete();
+	}
+
 	private void dropFile(String fileName) throws IOException {
 		dropFile(fileName, 1);
 	}
@@ -229,4 +283,5 @@ public class FileSourceModuleTests extends StreamTestSupport {
 			FileUtils.deleteDirectory(sourceDir);
 		}
 	}
+
 }
