@@ -117,6 +117,7 @@ allprojects {
 		mavenCentral()
 		maven { url 'http://repo.spring.io/milestone' }
 		maven { url 'http://repo.spring.io/libs-milestone' }
+		maven { url 'http://repo.spring.io/libs-staging-local' }
 		maven { url 'http://repo.spring.io/plugins-release' }
 		maven { url 'https://repo.eclipse.org/content/repositories/paho-releases' }
 	}
@@ -409,6 +410,7 @@ project('spring-xd-rxjava') {
 		compile "io.reactivex:rxjava"
 		compile "org.springframework.integration:spring-integration-core"
 		compile "org.springframework:spring-expression"
+		compile "org.slf4j:slf4j-api"
 	}
 }
 
@@ -874,6 +876,7 @@ project('spring-xd-module') {
 		compile "org.springframework.boot:spring-boot-loader"
 		compile "com.fasterxml.jackson.core:jackson-databind"
 		compile project(':spring-xd-module-spi')
+		compile "org.slf4j:slf4j-api"
 	}
 }
 
@@ -980,6 +983,7 @@ project('spring-xd-codec') {
 		compile "org.springframework:spring-core"
 		compile "org.springframework.integration:spring-integration-core"
 		compile "com.esotericsoftware:kryo-shaded"
+		compile "org.slf4j:slf4j-api"
 	}
 }
 

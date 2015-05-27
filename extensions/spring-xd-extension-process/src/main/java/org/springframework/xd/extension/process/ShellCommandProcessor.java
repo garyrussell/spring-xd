@@ -68,7 +68,7 @@ public class ShellCommandProcessor implements Lifecycle, InitializingBean {
 
 	private final static Logger log = LoggerFactory.getLogger(ShellCommandProcessor.class);
 
-    private final ShellWordsParser shellWordsParser = new ShellWordsParser();
+	private final ShellWordsParser shellWordsParser = new ShellWordsParser();
 
 	private TaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
 
@@ -151,6 +151,7 @@ public class ShellCommandProcessor implements Lifecycle, InitializingBean {
 		Assert.isTrue(isRunning(), "Shell process is not started.");
 		try {
 			serializer.serialize(data.getBytes(charset), stdin);
+			stdin.flush();
 		}
 		catch (IOException e) {
 			log.error(e.getMessage(), e);
