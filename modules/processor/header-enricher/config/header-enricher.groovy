@@ -24,10 +24,10 @@ beans {
 
 	si.channel(id:'input')
 	si.channel(id:'output')
-	
-	si.'header-enricher'('input-channel':'input','output-channel':'output') {
+
+	si.'header-enricher'('input-channel':'input', 'output-channel':'output', 'default-overwrite':overwrite) {
 		result.each {k,v->
-			si.'header'(name:k,expression:v,overwrite:overwrite)
+			si.'header'(name:k, expression:v)
 		}
 	}
 }
